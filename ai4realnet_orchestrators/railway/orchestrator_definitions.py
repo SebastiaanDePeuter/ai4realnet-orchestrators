@@ -5,6 +5,7 @@ from ai4realnet_orchestrators.orchestrator import Orchestrator
 from ai4realnet_orchestrators.railway.test_runner_kpi_af_029_railway import TestRunner_KPI_AF_029_Railway
 from ai4realnet_orchestrators.railway.test_runner_kpi_nf_045_railway import TestRunner_KPI_NF_045_Railway
 from ai4realnet_orchestrators.railway.test_runner_kpi_pf_026_railway import TestRunner_KPI_PF_026_Railway
+from ai4realnet_orchestrators.railway.test_runner_kpi_rs_058_railway import TestRunner_KPI_RS_058_Railway
 
 railway_orchestrator = Orchestrator(
   test_runners={
@@ -278,10 +279,28 @@ railway_orchestrator = Orchestrator(
     #         test_id="511f2ab0-da90-4d55-a23f-af5eda0baf7d", scenario_ids=['cf7bb259-0ad4-4454-a9c8-eb8add0bec57'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"
     #     ),
     #
-    #     # KPI-RS-058: Robustness to operator input (Railway)
-    #     "1cbf44c3-0c82-4f9e-9857-c7c1d96d3ab9": TestRunner_KPI_RS_058_Railway(
-    #         test_id="1cbf44c3-0c82-4f9e-9857-c7c1d96d3ab9", scenario_ids=['7a1c9dac-ec75-42e1-9355-34d88eabc52f'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-    #     ),
+        # KPI-RS-058: Robustness to operator input (Railway)
+        "1cbf44c3-0c82-4f9e-9857-c7c1d96d3ab9": TestRunner_KPI_RS_058_Railway(
+            test_id="1cbf44c3-0c82-4f9e-9857-c7c1d96d3ab9", scenario_ids=[
+                "5a60713d-01f2-4d32-9867-21904629e254", "0db72a40-43e8-477b-89b3-a7bd1224660a", "7def3118-2e9c-4de7-8d61-f0e76fbeee5d", 
+                "3ae60635-6995-4fb1-8309-61fded3d6fd8", "eeef8445-723d-4740-b89f-4dbaf75f9ae6", "94af1ed1-3686-4a9e-99f5-3a7ad908f125", 
+                "8250d0e2-700e-4051-85c3-a8d0d95a5f0f", "c58759a7-a64a-4cbf-970b-948bae0c2254", "f94f517f-c0a4-4415-b726-186cdc75f9c6", 
+                "c0e2c3e0-c171-48dd-a312-5de070e3f937", "6fc5f67a-40fa-45ce-819e-35a85e08e560", "66bce513-502c-43b4-a155-8a16c410a7c6", 
+                "eff645bf-7ea8-490d-ae8a-ebb0d16a774c", "8397e6d6-babc-469b-a239-7eabcbd510da", "c359f13c-d222-4b04-ad0a-2bb30fb9da5f", 
+                "97203764-6717-4ca6-bae9-c35c4eb38206", "adc4bf52-096c-4369-a85f-c9bf4b86bc64", "72f93d48-ecef-4bf7-9d97-cb008b47e566", 
+                "b470667b-d9c9-4af4-b64e-c32102c34387", "4aa9e1b8-8669-466e-b4b9-c7db2a098bec", "8b308495-7ea6-4ddc-acb4-56eb5b3aec12", 
+                "a8f69dc4-04a1-434a-ad97-27c745561b6a", "8b244f56-50e1-411a-a7d8-a2b89dfab26e", "8e6419c1-6470-4272-9c4b-43d9fe19dd3d", 
+                "ec503b6e-3682-4dcd-9dc7-b194b67283d9", "74fd9eab-d2e5-4222-8656-81fc2dde7c21", "c16e54c1-33b2-45b8-95b0-33cc4f5400d5", 
+                "c80effec-27b8-4103-b726-344a85f35407", "9bec9335-3dd5-4d88-b2ac-c5d711bcab36", "4a067d3c-75e6-4e91-a42d-cdf291016674", 
+                "a5dff3c8-902e-4cb9-8466-d277d0ed4d67", "aca25feb-6254-40b3-8d40-3c805797c69b", "deb21442-0f94-4ff3-b78d-8d418415d646", 
+                "6cf2cc89-d30e-4063-bced-051f3cdae92f", "84bcbff5-346f-452c-87ab-08ceff6364f2", "9acbe68e-2a45-420b-a142-34996dbcfb83", 
+                "42786e4c-c80e-40f5-8237-bafc5f39979d", "242a6240-b62c-48b4-a264-b6737e893fa5", "3c38a1d3-2340-43ed-ac0b-4b76c6588b92", 
+                "b89daede-405b-411a-a02b-ee32d7c9d020", "9e0aac9e-ddf9-4575-bf1c-d08a923e15fa", "befa97fb-2a74-4f2e-91c8-ea2879d08dcf", 
+                "0cc18965-c967-4b58-ac7f-38a443b4cd16", "d0f62f51-5a51-443b-bf7b-18e3d5b191dc", "c2ebb179-0a2d-4e84-95be-2837be406716", 
+                "3ac76f3c-f560-4666-af61-c693e4cd3ad4", "484bbf93-bc67-4726-8b81-6c4ab608c861", "11b19a5f-4d61-4b5d-980c-98cf0c16906a", 
+                "edecaeb7-53d3-411a-a00c-2ce6226fde50", "a43cb746-fa63-4d39-87cd-43a81fbf3a8e"
+                ], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+        ),
     #
     #     # KPI-DF-069: Drop-off in reward (Railway)
     #     "a94c858e-4bc3-4d67-bd78-5c81506e39f7": TestRunner_KPI_DF_069_Railway(
