@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 import shutil
+import os
 
 import numpy as np
 from flatland.trajectories.trajectories import Trajectory
@@ -11,45 +12,48 @@ logger = logging.getLogger(__name__)
 # KPI-RS-058: Robustness to operator input (Railway)
 class TestRunner_KPI_RS_058_Railway(AbtractTestRunnerRailway):
 
-    def _run_scenario(self, scenario_id: str, submission_id: str, generate_policy_args):
-        self.exec(generate_policy_args, scenario_id, submission_id, f"{submission_id}/{self.test_id}/{scenario_id}")
+    def _run_scenario(self, scenario_id: str, submission_id: str, generate_policy_args, data_dir):
+        self.exec(generate_policy_args, scenario_id, submission_id, data_dir)
 
-        data_dir = f"{DATA_VOLUME}/{submission_id}/{self.test_id}/{scenario_id}"
-        trajectory = Trajectory.load_existing(data_dir=Path(data_dir), ep_id=scenario_id)
+        trajectory = Trajectory.load_existing(data_dir=Path(f"{DATA_VOLUME}/{data_dir}"), ep_id=scenario_id)
 
-        df_trains_arrived = trajectory.trains_arrived
-        if len(df_trains_arrived) == 1:
-            success_rate = df_trains_arrived.iloc[0]["success_rate"]
-            punctuality = mean_punctuality_aggregator(trajectory.trains_rewards_dones_infos["reward"].to_list())
-        else:
+        # return success_rate, punctuality
+        if len(trajectory.trains_arrived) == 0:
             success_rate = 0.0
             punctuality = 0.0
+        else:
+            num_agents = trajectory.trains_rewards_dones_infos["agent_id"].max() + 1
+            success_rate = trajectory.trains_arrived.iloc[0]["success_rate"]
+            punctuality = mean_punctuality_aggregator([r for r in trajectory.trains_rewards_dones_infos.tail(num_agents)["reward"].to_list()])
 
         return success_rate, punctuality
 
     
     def run_scenario(self, scenario_id: str, submission_id: str):
         env_path = TestRunner_KPI_RS_058_Railway.load_scenario_data(scenario_id)
-        data_dir = f"{DATA_VOLUME}/{submission_id}/{self.test_id}/{scenario_id}"
-        runner_data_dir = f"{DATA_VOLUME_MOUNTPATH}/{submission_id}/{self.test_id}/{scenario_id}"
-        intervened_policy_args = [
-            "--data-dir", runner_data_dir,
+        data_dir = f"{submission_id}/{self.test_id}/{scenario_id}"
+        basic_policy_args = [
             "--rewards-pkg", "flatland.envs.rewards", "--rewards-cls", "PunctualityRewards",
             "--ep-id", scenario_id,
             "--env-path", f"{SCENARIOS_VOLUME_MOUNTPATH}/{env_path}",
             "--snapshot-interval", "10",
         ]
-        non_intervened_policy_args = intervened_policy_args + ["--policy", "intervened_policies.random_intervention_policy.NoOperatorInterventionPolicy"]
 
-        success_rate, punctuality = self._run_scenario(scenario_id, submission_id, intervened_policy_args)
-        shutil.rmtree(data_dir) # remove first run data
-        base_success_rate, base_punctuality = self._run_scenario(scenario_id, submission_id, non_intervened_policy_args)
-        shutil.rmtree(data_dir) # remove second run data
+        runner_data_dir_intervention = f"{data_dir}/intervened"
+        intervened_policy_args = ["--data-dir", f"{DATA_VOLUME_MOUNTPATH}/{runner_data_dir_intervention}"] + basic_policy_args
+
+        runner_data_dir_no_intervention = f"{data_dir}/non_intervened"
+        non_intervened_policy_args = basic_policy_args + ["--data-dir", f"{DATA_VOLUME_MOUNTPATH}/{runner_data_dir_no_intervention}", "--policy", "intervened_policies.random_intervention_policy.NoOperatorInterventionPolicy"]
+
+        success_rate, punctuality = self._run_scenario(scenario_id, submission_id, intervened_policy_args, runner_data_dir_intervention)
+        base_success_rate, base_punctuality = self._run_scenario(scenario_id, submission_id, non_intervened_policy_args, runner_data_dir_no_intervention)
+
+        self.upload_and_empty_local(submission_id=submission_id, scenario_id=scenario_id)
 
         return {
-            'primary': base_success_rate - success_rate
+            'lost_success_rate': base_success_rate - success_rate,
+            'lost_punctuality': base_punctuality - punctuality,
         }
-
 
     @staticmethod
     def load_scenario_data(scenario_id: str) -> str:
