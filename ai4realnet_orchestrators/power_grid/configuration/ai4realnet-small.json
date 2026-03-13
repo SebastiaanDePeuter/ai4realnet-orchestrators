@@ -1,0 +1,27 @@
+{
+    "75d20248-740b-4d84-86e7-1de89f10fc1e": {
+        "scenario_name": "ai4realnet_small",
+        "generate_new_data": false,
+        "new_data_years": 1
+    },
+    "fc090c38-8740-4911-96aa-2defd06f8715": {
+        "scenario_name": "ai4realnet_small",
+        "generate_new_data": false,
+        "new_data_years": 1
+    },
+    "5dd33cc9-a4aa-4a61-bd3f-5fae1c1bf701": {
+        "scenario_name": "ai4realnet_small",
+        "generate_new_data": false,
+        "new_data_years": 1
+    },
+    "ed8ba2fc-853e-4e79-a984-b1986b9b6e97": {
+        "scenario_name": "ai4realnet_small",
+        "generate_new_data": false,
+        "new_data_years": 1
+    },
+    "729cc815-ac93-4209-9f62-b57b920c2d0a": {
+        "scenario_name": "ai4realnet_small",
+        "generate_new_data": false,
+        "new_data_years": 1
+    }
+}

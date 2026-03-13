@@ -10,6 +10,25 @@ from ai4realnet_orchestrators.orchestrator import Orchestrator
 
 # NOTE: import YourTestRunner implementations here
 # from ai4realnet_orchestrators.power_grid.test_runner import YourTestRunner
+from ai4realnet_orchestrators.power_grid.test_runner_robustness_resilience_kpi_069_077 import (
+    TestRunner_KPI_DF_069_Power_Grid,
+    TestRunner_KPI_FF_070_Power_Grid,
+    TestRunner_KPI_SF_071_Power_Grid,
+    TestRunner_KPI_SF_072_Power_Grid,
+    TestRunner_KPI_VF_073_Power_Grid,
+    TestRunner_KPI_AF_074_Power_Grid,
+    TestRunner_KPI_DF_075_Power_Grid,
+    TestRunner_KPI_RF_076_Power_Grid,
+    TestRunner_KPI_SF_077_Power_Grid,
+)
+
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_cf_012_power_grid import TestRunner_KPI_CF_012_Power_Grid
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_nf_024_power_grid import TestRunner_KPI_NF_024_Power_Grid
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_of_036_power_grid import TestRunner_KPI_OF_036_Power_Grid
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_tf_034_power_grid import TestRunner_KPI_TF_034_Power_Grid
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_af_008_power_grid import TestRunner_KPI_AF_008_Power_Grid
+
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_df_052_power_grid import TestRunner_KPI_DF_052_Power_Grid
 
 logger = logging.getLogger(__name__)
 
@@ -121,35 +140,36 @@ power_grid_orchestrator = Orchestrator(
         #         test_id="67f77d51-0893-4cbd-b349-b73bd2f73db2", scenario_ids=['6958bf4c-39ff-484f-b609-25500e9e314a'], benchmark_id="65547935-f436-49fa-8d20-f320c6bd46dc"
         #     ),
         #
-        #     # KPI-AF-008: Assistant alert accuracy (Power Grid)
-        #     "aba10b3f-0d5c-4f90-aec4-69460bbb098b": TestRunner_KPI_AF_008_Power_Grid(
-        #         test_id="aba10b3f-0d5c-4f90-aec4-69460bbb098b", scenario_ids=['729cc815-ac93-4209-9f62-b57b920c2d0a'], benchmark_id="3b1bdca6-ed90-4938-bd63-fd657aa7dcd7"
-        #     ),
+        # KPI-AF-008: Assistant alert accuracy (Power Grid)
+        "aba10b3f-0d5c-4f90-aec4-69460bbb098b": TestRunner_KPI_AF_008_Power_Grid(
+            test_id="aba10b3f-0d5c-4f90-aec4-69460bbb098b", scenario_ids=['729cc815-ac93-4209-9f62-b57b920c2d0a'], benchmark_id="3b1bdca6-ed90-4938-bd63-fd657aa7dcd7"
+        ),
         #
-        #     # KPI-NF-024: Network utilization (Power Grid)
-        #     "5d1db79c-a7a4-4060-bb03-4629d64b1a43": TestRunner_KPI_NF_024_Power_Grid(
-        #         test_id="5d1db79c-a7a4-4060-bb03-4629d64b1a43", scenario_ids=['ed8ba2fc-853e-4e79-a984-b1986b9b6e97'], benchmark_id="3b1bdca6-ed90-4938-bd63-fd657aa7dcd7"
-        #     ),
+        # KPI-NF-024: Network utilization (Power Grid)
+        "5d1db79c-a7a4-4060-bb03-4629d64b1a43": TestRunner_KPI_NF_024_Power_Grid(
+                test_id="5d1db79c-a7a4-4060-bb03-4629d64b1a43", scenario_ids=['ed8ba2fc-853e-4e79-a984-b1986b9b6e97'], benchmark_id="3b1bdca6-ed90-4938-bd63-fd657aa7dcd7"
+            ),
         #
         #     # KPI-TS-035: Total decision time (Power Grid)
         #     "58ce79e0-5c14-4c51-8d09-89f856361259": TestRunner_KPI_TS_035_Power_Grid(
         #         test_id="58ce79e0-5c14-4c51-8d09-89f856361259", scenario_ids=['1294d425-66bd-4510-b4b3-d9f64ca0e4f9'], benchmark_id="3b1bdca6-ed90-4938-bd63-fd657aa7dcd7"
         #     ),
         #
-        #     # KPI-CF-012: Carbon intensity (Power Grid)
-        #     "ab91af79-ffc3-4da7-916a-6574609dc1b6": TestRunner_KPI_CF_012_Power_Grid(
-        #         test_id="ab91af79-ffc3-4da7-916a-6574609dc1b6", scenario_ids=['75d20248-740b-4d84-86e7-1de89f10fc1e'], benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
-        #     ),
+
+        # KPI-CF-012: Carbon intensity (Power Grid)
+        "ab91af79-ffc3-4da7-916a-6574609dc1b6": TestRunner_KPI_CF_012_Power_Grid(
+            test_id="ab91af79-ffc3-4da7-916a-6574609dc1b6", scenario_ids=['75d20248-740b-4d84-86e7-1de89f10fc1e'], benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
+        ),
         #
-        #     # KPI-TF-034: Topological action complexity (Power Grid)
-        #     "0b8c02c6-0120-431c-872f-0fb4bc8d5fba": TestRunner_KPI_TF_034_Power_Grid(
-        #         test_id="0b8c02c6-0120-431c-872f-0fb4bc8d5fba", scenario_ids=['5dd33cc9-a4aa-4a61-bd3f-5fae1c1bf701'], benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
-        #     ),
+        # KPI-TF-034: Topological action complexity (Power Grid)
+        "0b8c02c6-0120-431c-872f-0fb4bc8d5fba": TestRunner_KPI_TF_034_Power_Grid(
+            test_id="0b8c02c6-0120-431c-872f-0fb4bc8d5fba", scenario_ids=['5dd33cc9-a4aa-4a61-bd3f-5fae1c1bf701'], benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
+        ),
         #
         #     # KPI-OF-036: Operation score (Power Grid)
-        #     "ae4dcac7-c559-457e-902d-ee35d064bb3f": TestRunner_KPI_OF_036_Power_Grid(
-        #         test_id="ae4dcac7-c559-457e-902d-ee35d064bb3f", scenario_ids=['fc090c38-8740-4911-96aa-2defd06f8715'], benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
-        #     ),
+        "ae4dcac7-c559-457e-902d-ee35d064bb3f": TestRunner_KPI_OF_036_Power_Grid(
+            test_id="ae4dcac7-c559-457e-902d-ee35d064bb3f", scenario_ids=['fc090c38-8740-4911-96aa-2defd06f8715'], benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
+        ),
         #
         #     # KPI-AS-068: Assistant adaptation to user preferences (Power Grid)
         #     "c69ff5e9-497b-41e8-adff-2221bb823365": TestRunner_KPI_AS_068_Power_Grid(
@@ -176,10 +196,10 @@ power_grid_orchestrator = Orchestrator(
         #         test_id="1409dbf6-0f66-4570-97df-fda84c46c71d", scenario_ids=['547f8244-d091-40da-892d-ee24a26ee29f'], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
         #     ),
         #
-        #     # KPI-DF-052: Domain shift adaptation time (Power Grid)
-        #     "855729a4-6729-4ae2-bb8d-443ef4867d94": TestRunner_KPI_DF_052_Power_Grid(
-        #         test_id="855729a4-6729-4ae2-bb8d-443ef4867d94", scenario_ids=['81f18394-0164-4896-9408-4315bcfcc5e0'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"
-        #     ),
+            # KPI-DF-052: Domain shift adaptation time (Power Grid)
+        "855729a4-6729-4ae2-bb8d-443ef4867d94": TestRunner_KPI_DF_052_Power_Grid(
+            test_id="855729a4-6729-4ae2-bb8d-443ef4867d94", scenario_ids=['81f18394-0164-4896-9408-4315bcfcc5e0'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"
+        ),
         #
         #     # KPI-DF-053: Domain shift generalization gap (Power Grid)
         #     "17b805b2-b773-4c22-8ba9-598780e7a40d": TestRunner_KPI_DF_053_Power_Grid(
@@ -216,30 +236,30 @@ power_grid_orchestrator = Orchestrator(
         #         test_id="75cc9343-9371-4eb1-9613-22a26c67fc00", scenario_ids=['0c0730f2-e795-4c9d-8220-9bee29c46dc6'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
         #     ),
         #
-        #     # KPI-DF-069: Drop-off in reward (Power Grid)
-        #     "1cbb7783-47b4-4289-9abf-27939da69a2f": TestRunner_KPI_DF_069_Power_Grid(
-        #         test_id="1cbb7783-47b4-4289-9abf-27939da69a2f", scenario_ids=['900d5489-2539-4a49-b3fb-3ae2039be92f'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-        #     ),
+             # KPI-DF-069: Drop-off in reward (Power Grid)
+             "1cbb7783-47b4-4289-9abf-27939da69a2f": TestRunner_KPI_DF_069_Power_Grid(
+                 test_id="1cbb7783-47b4-4289-9abf-27939da69a2f", scenario_ids=['900d5489-2539-4a49-b3fb-3ae2039be92f'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+             ),
         #
-        #     # KPI-FF-070: Frequency changed output AI agent (Power Grid)
-        #     "acaf712a-c06c-4a04-a00f-0e7feeefb60c": TestRunner_KPI_FF_070_Power_Grid(
-        #         test_id="acaf712a-c06c-4a04-a00f-0e7feeefb60c", scenario_ids=['fdaac433-3ef0-4667-afb8-8014d0c1afa3'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-        #     ),
+             # KPI-FF-070: Frequency changed output AI agent (Power Grid)
+             "acaf712a-c06c-4a04-a00f-0e7feeefb60c": TestRunner_KPI_FF_070_Power_Grid(
+                 test_id="acaf712a-c06c-4a04-a00f-0e7feeefb60c", scenario_ids=['fdaac433-3ef0-4667-afb8-8014d0c1afa3'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+             ),
         #
-        #     # KPI-SF-071: Severity of changed output AI agent (Power Grid)
-        #     "3d033ec6-942a-4b03-b26e-f8152ba48022": TestRunner_KPI_SF_071_Power_Grid(
-        #         test_id="3d033ec6-942a-4b03-b26e-f8152ba48022", scenario_ids=['70d937d5-742b-4838-a456-4a95ff994788'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-        #     ),
+             # KPI-SF-071: Severity of changed output AI agent (Power Grid)
+             "3d033ec6-942a-4b03-b26e-f8152ba48022": TestRunner_KPI_SF_071_Power_Grid(
+                 test_id="3d033ec6-942a-4b03-b26e-f8152ba48022", scenario_ids=['70d937d5-742b-4838-a456-4a95ff994788'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+             ),
         #
-        #     # KPI-SF-072: Steps survived with perturbations (Power Grid)
-        #     "a121d8bd-1943-41ba-b3a7-472a0154f8f9": TestRunner_KPI_SF_072_Power_Grid(
-        #         test_id="a121d8bd-1943-41ba-b3a7-472a0154f8f9", scenario_ids=['9cd1a5e0-8445-4b9d-859b-76b096d33049'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-        #     ),
+             # KPI-SF-072: Steps survived with perturbations (Power Grid)
+             "a121d8bd-1943-41ba-b3a7-472a0154f8f9": TestRunner_KPI_SF_072_Power_Grid(
+                 test_id="a121d8bd-1943-41ba-b3a7-472a0154f8f9", scenario_ids=['9cd1a5e0-8445-4b9d-859b-76b096d33049'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+             ),
         #
-        #     # KPI-VF-073: Vulnerability to perturbation (Power Grid)
-        #     "b8a9a411-7cfe-4c1d-b9a6-eef1c0efe920": TestRunner_KPI_VF_073_Power_Grid(
-        #         test_id="b8a9a411-7cfe-4c1d-b9a6-eef1c0efe920", scenario_ids=['61063867-df62-4024-be42-c57507a15d7c'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-        #     ),
+             # KPI-VF-073: Vulnerability to perturbation (Power Grid)
+             "b8a9a411-7cfe-4c1d-b9a6-eef1c0efe920": TestRunner_KPI_VF_073_Power_Grid(
+                 test_id="b8a9a411-7cfe-4c1d-b9a6-eef1c0efe920", scenario_ids=['61063867-df62-4024-be42-c57507a15d7c'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+             ),
         #
         #     # KPI-RF-078: Reward per action (Power Grid)
         #     "95ba1e9a-8d72-4c0e-9526-7676f70ff067": TestRunner_KPI_RF_078_Power_Grid(
@@ -256,25 +276,25 @@ power_grid_orchestrator = Orchestrator(
         #         test_id="ce7d0394-1aa0-41c2-84b7-dfcfe006eb8b", scenario_ids=['53b0db0e-7092-455b-9e2c-327ee017f776'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
         #     ),
         #
-        #     # KPI-AF-074: Area between reward curves (Power Grid)
-        #     "534f5a1f-7115-48a5-b58c-4deb044d425d": TestRunner_KPI_AF_074_Power_Grid(
-        #         test_id="534f5a1f-7115-48a5-b58c-4deb044d425d", scenario_ids=['bbcf8224-c768-4469-8ff5-939d977383b4'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
-        #     ),
+             # KPI-AF-074: Area between reward curves (Power Grid)
+             "534f5a1f-7115-48a5-b58c-4deb044d425d": TestRunner_KPI_AF_074_Power_Grid(
+                 test_id="534f5a1f-7115-48a5-b58c-4deb044d425d", scenario_ids=['bbcf8224-c768-4469-8ff5-939d977383b4'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
+             ),
         #
-        #     # KPI-DF-075: Degradation time (Power Grid)
-        #     "04a23bfc-fc44-4ec4-a732-c29214130a83": TestRunner_KPI_DF_075_Power_Grid(
-        #         test_id="04a23bfc-fc44-4ec4-a732-c29214130a83", scenario_ids=['b355482b-30a2-431e-9536-8e3dd29d06d1'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
-        #     ),
+             # KPI-DF-075: Degradation time (Power Grid)
+             "04a23bfc-fc44-4ec4-a732-c29214130a83": TestRunner_KPI_DF_075_Power_Grid(
+                 test_id="04a23bfc-fc44-4ec4-a732-c29214130a83", scenario_ids=['b355482b-30a2-431e-9536-8e3dd29d06d1'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
+             ),
         #
-        #     # KPI-RF-076: Restorative time (Power Grid)
-        #     "225aaee8-7c7f-4faf-810b-407b551e9f2a": TestRunner_KPI_RF_076_Power_Grid(
-        #         test_id="225aaee8-7c7f-4faf-810b-407b551e9f2a", scenario_ids=['2eaf04e3-090a-4c13-b923-ac86de1b6db1'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
-        #     ),
+             # KPI-RF-076: Restorative time (Power Grid)
+             "225aaee8-7c7f-4faf-810b-407b551e9f2a": TestRunner_KPI_RF_076_Power_Grid(
+                 test_id="225aaee8-7c7f-4faf-810b-407b551e9f2a", scenario_ids=['2eaf04e3-090a-4c13-b923-ac86de1b6db1'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
+             ),
         #
-        #     # KPI-SF-077: Similarity state to unperturbed situation (Power Grid)
-        #     "7fe4210f-1253-411c-ba03-49d8b37c71fa": TestRunner_KPI_SF_077_Power_Grid(
-        #         test_id="7fe4210f-1253-411c-ba03-49d8b37c71fa", scenario_ids=['4523d73e-427a-42a1-b841-c9668373fafb'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
-        #     ),
+             # KPI-SF-077: Similarity state to unperturbed situation (Power Grid)
+             "7fe4210f-1253-411c-ba03-49d8b37c71fa": TestRunner_KPI_SF_077_Power_Grid(
+                 test_id="7fe4210f-1253-411c-ba03-49d8b37c71fa", scenario_ids=['4523d73e-427a-42a1-b841-c9668373fafb'], benchmark_id="31ea606b-681a-437a-85b9-7c81d4ccc287"
+             ),
         #
         #     # KPI-RS-091: Reflection on operator trust  (Power Grid)
         #     "0eb49c18-fbf7-4797-b4c5-6dabc9795ddb": TestRunner_KPI_RS_091_Power_Grid(
@@ -329,3 +349,4 @@ def orchestrator(self, submission_data_url: str, tests: List[str] = None, **kwar
         submission_data_url=submission_data_url,
         tests=tests,
     )
+

@@ -1,4 +1,5 @@
 # additional requirements for railway test runner
-pandas
+# pin pandas to < 3 because of new dedicated string data type by default in https://pandas.pydata.org/pandas-docs/stable/whatsnew/v3.0.0.html
+pandas<3
 # TODO use versioned dependency instead of branch
 git+https://github.com/flatland-association/flatland-rl.git@main

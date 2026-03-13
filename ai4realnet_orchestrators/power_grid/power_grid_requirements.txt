@@ -1,0 +1,1 @@
+-e git+https://github.com/AI4REALNET/grid2evaluate.git@main
