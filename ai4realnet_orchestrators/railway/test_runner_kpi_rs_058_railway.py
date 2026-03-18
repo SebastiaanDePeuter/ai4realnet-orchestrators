@@ -15,7 +15,11 @@ class TestRunner_KPI_RS_058_Railway(AbtractTestRunnerRailway):
     def _run_scenario(self, scenario_id: str, submission_id: str, generate_policy_args, data_dir):
         self.exec(generate_policy_args, scenario_id, submission_id, data_dir)
 
-        trajectory = Trajectory.load_existing(data_dir=Path(f"{DATA_VOLUME}/{data_dir}"), ep_id=scenario_id)
+        try:
+            trajectory = Trajectory.load_existing(data_dir=Path(f"{DATA_VOLUME}/{data_dir}"), ep_id=scenario_id)
+        except Exception as e: 
+            logger.error(f"Failed to load trajectory: {e}")
+            raise
 
         # return success_rate, punctuality
         if len(trajectory.trains_arrived) == 0:
@@ -51,8 +55,9 @@ class TestRunner_KPI_RS_058_Railway(AbtractTestRunnerRailway):
         self.upload_and_empty_local(submission_id=submission_id, scenario_id=scenario_id)
 
         return {
-            'lost_success_rate': base_success_rate - success_rate,
-            'lost_punctuality': base_punctuality - punctuality,
+            'primary': success_rate - base_success_rate,
+            'gained_success_rate': success_rate - base_success_rate,
+            'gained_punctuality': punctuality - base_punctuality,
         }
 
     @staticmethod
