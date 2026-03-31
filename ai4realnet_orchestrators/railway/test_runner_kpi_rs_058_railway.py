@@ -11,6 +11,15 @@ logger = logging.getLogger(__name__)
    
 # KPI-RS-058: Robustness to operator input (Railway)
 class TestRunner_KPI_RS_058_Railway(AbtractTestRunnerRailway):
+    """
+    This implements KPI 058 (robustness to operator input). It assumes that submission_data_url points to a docker 
+    image implemening the testing code of the KPI itself. How the docker image should be implemented is explained in 
+    https://github.com/SebastiaanDePeuter/AI4RealNet_KPI-RS-058. A correctly implemented docker image will contain the 
+    flatland simulator, the agent to be tested, and a random "human" intervention policy. Performance of the agent is 
+    evaluated and key measurements are recorded into flatland's own data format for trajectory data and written to the 
+    DATA_VOLUME. Robustness to an operator is measured by comparing the performance of the agent itself, with its 
+    performance when part of its actions (10%) is overridden by the human policy.
+    """
 
     def _run_scenario(self, scenario_id: str, submission_id: str, generate_policy_args, data_dir):
         self.exec(generate_policy_args, scenario_id, submission_id, data_dir)
