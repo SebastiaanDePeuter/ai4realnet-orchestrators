@@ -29,6 +29,7 @@ from ai4realnet_orchestrators.power_grid.test_runner_kpi_tf_034_power_grid impor
 from ai4realnet_orchestrators.power_grid.test_runner_kpi_af_008_power_grid import TestRunner_KPI_AF_008_Power_Grid
 
 from ai4realnet_orchestrators.power_grid.test_runner_kpi_df_052_power_grid import TestRunner_KPI_DF_052_Power_Grid
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_rs_058_power_grid import TestRunner_KPI_RS_058_Power_Grid
 
 logger = logging.getLogger(__name__)
 
@@ -231,10 +232,10 @@ power_grid_orchestrator = Orchestrator(
         #         test_id="648afbec-80ad-4490-869f-6c3d8088d50f", scenario_ids=['99dfde1e-2798-4741-b3eb-610a3e847bc8'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"
         #     ),
         #
-        #     # KPI-RS-058: Robustness to operator input (Power Grid)
-        #     "75cc9343-9371-4eb1-9613-22a26c67fc00": TestRunner_KPI_RS_058_Power_Grid(
-        #         test_id="75cc9343-9371-4eb1-9613-22a26c67fc00", scenario_ids=['0c0730f2-e795-4c9d-8220-9bee29c46dc6'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
-        #     ),
+            # KPI-RS-058: Robustness to operator input (Power Grid)
+            "75cc9343-9371-4eb1-9613-22a26c67fc00": TestRunner_KPI_RS_058_Power_Grid(
+                test_id="75cc9343-9371-4eb1-9613-22a26c67fc00", scenario_ids=['0c0730f2-e795-4c9d-8220-9bee29c46dc6'], benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d"
+            ),
         #
              # KPI-DF-069: Drop-off in reward (Power Grid)
              "1cbb7783-47b4-4289-9abf-27939da69a2f": TestRunner_KPI_DF_069_Power_Grid(
