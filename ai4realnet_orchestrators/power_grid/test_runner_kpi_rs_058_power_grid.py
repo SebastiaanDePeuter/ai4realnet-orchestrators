@@ -14,6 +14,16 @@ DATA_VOLUME_MOUNTPATH = os.environ.get("DATA_VOLUME_MOUNTPATH", "/app/data")
 logger = logging.getLogger(__name__)
 
 class TestRunner_KPI_RS_058_Power_Grid(TestRunner):
+    """
+    This implements KPI 058 (robustness to operator input). It assumes that submission_data_url points to a docker 
+    image implemening the testing code of the KPI itself. How the docker image should be implemented is explained in 
+    https://github.com/SebastiaanDePeuter/AI4RealNet_KPI-RS-058. A correctly implemented docker image will contain the 
+    Grid2Op simulator, the agent to be tested, and a random "human" intervention policy. Performance of the agent is 
+    evaluated and key measurements are written into a JSON file located in the DATA_VOLUME. Robustness to an operator 
+    is measured by comparing the performance of the agent itself, with its performance when part of its actions (10%) 
+    is overridden by the human policy.
+    """
+
     def init(self, submission_data_url: str, submission_id: str):
         self.submission_data_url = submission_data_url
         self.submission_id = submission_id
