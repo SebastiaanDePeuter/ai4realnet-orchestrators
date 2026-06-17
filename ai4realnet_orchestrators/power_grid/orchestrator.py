@@ -8,9 +8,16 @@ from celery import Celery
 from ai4realnet_orchestrators.orchestrator import Orchestrator
 
 # NOTE: import YourTestRunner implementations here
-from ai4realnet_orchestrators.power_grid.power_grid_test_runner import (
+from ai4realnet_orchestrators.power_grid.operational_test_runner import (
+    TestRunner_KPI_AF_008_Power_Grid,
+    TestRunner_KPI_CF_012_Power_Grid,
+    TestRunner_KPI_OF_036_Power_Grid
+)
+from ai4realnet_orchestrators.power_grid.reliability_test_runner import (
     TestRunner_KPI_DF_052_Power_Grid,
-    TestRunner_KPI_DF_057_Power_Grid,
+    TestRunner_KPI_DF_057_Power_Grid
+)
+from ai4realnet_orchestrators.power_grid.robustness_resilience_test_runner import (
     TestRunner_KPI_DF_069_Power_Grid,
     TestRunner_KPI_FF_070_Power_Grid,
     TestRunner_KPI_SF_071_Power_Grid,
@@ -19,10 +26,7 @@ from ai4realnet_orchestrators.power_grid.power_grid_test_runner import (
     TestRunner_KPI_AF_074_Power_Grid,
     TestRunner_KPI_DF_075_Power_Grid,
     TestRunner_KPI_RF_076_Power_Grid,
-    TestRunner_KPI_SF_077_Power_Grid,
-    TestRunner_KPI_AF_008_Power_Grid,
-    TestRunner_KPI_CF_012_Power_Grid,
-    TestRunner_KPI_OF_036_Power_Grid
+    TestRunner_KPI_SF_077_Power_Grid
 )
 
 logger = logging.getLogger(__name__)

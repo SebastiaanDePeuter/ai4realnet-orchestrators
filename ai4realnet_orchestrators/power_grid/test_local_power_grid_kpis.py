@@ -30,12 +30,16 @@ PARENT_DIR = os.path.dirname(ORCHESTRATORS_DIR)  # ai4realnet-orchestrators
 sys.path.insert(0, PARENT_DIR)
 sys.path.insert(0, ORCHESTRATORS_DIR)
 
-from ai4realnet_orchestrators.power_grid.power_grid_test_runner import (
-    RobustnessResilienceTestRunner,
-    ReliabilityTestRunner,
+from ai4realnet_orchestrators.power_grid.operational_test_runner import (
     OperationalTestRunner,
-    OPERATIONAL_KPI_MAPPING,
-    RELIABILITY_KPI_MAPPING,
+    OPERATIONAL_KPI_MAPPING
+)
+from ai4realnet_orchestrators.power_grid.reliability_test_runner import (
+    ReliabilityTestRunner,
+    RELIABILITY_KPI_MAPPING
+)
+from ai4realnet_orchestrators.power_grid.robustness_resilience_test_runner import (
+    RobustnessResilienceTestRunner,
     ROBUSTNESS_RESILIENCE_KPI_MAPPING
 )
 

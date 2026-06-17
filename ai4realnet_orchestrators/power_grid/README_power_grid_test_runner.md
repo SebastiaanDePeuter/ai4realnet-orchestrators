@@ -4,22 +4,29 @@ Combined KPI implementations for the AI4REALNET Power Grid domain.
 
 ## Overview
 
-This module provides the base `PowerGridTestRunner` class and implementations for 12 KPIs across three categories:
+This module provides the base `PowerGridTestRunner` class and implementations for 14 KPIs across four categories:
 
 | Category | KPIs | Method |
 |----------|------|--------|
 | Operational | 008, 012, 036 | ScoreL2RPN2023 |
+| Reliability | 052, 057 | Domain shift framework |
 | Robustness | 069-073 | Multi-attacker framework |
 | Resilience | 074-077 | Multi-attacker framework |
 
 ## KPIs Implemented
 
-### Operational KPIs
+### Operational KPIs (Benchmark: 4b0be731-8371-4e4e-a673-b630187b0bb8)
 | Class | KPI | Description |
 |-------|-----|-------------|
 | `TestRunner_KPI_AF_008_Power_Grid` | Assistant alert accuracy | Alert confidence score |
 | `TestRunner_KPI_CF_012_Power_Grid` | Carbon intensity | Non-renewable energy score |
 | `TestRunner_KPI_OF_036_Power_Grid` | Operation score | Grid operation performance |
+
+### Reliability & Domain Shift KPIs (Benchmark: 43040944-39ac-47c9-b91d-bc8ca5693b3c)
+| Class | KPI | Description |
+|-------|-----|-------------|
+| `TestRunner_KPI_DF_052_Power_Grid` | Domain shift adaptation time | Iterations to adapt policy to shift |
+| `TestRunner_KPI_DF_057_Power_Grid` | Domain shift success rate drop | Performance drop under domain shift |
 
 ### Robustness KPIs (Benchmark: 3810191b-8cfd-4b03-86b2-f7e530aab30d)
 | Class | KPI | Description |
@@ -44,11 +51,13 @@ This module provides the base `PowerGridTestRunner` class and implementations fo
 PowerGridTestRunner (Base Template)
 ├── init() ─────────────── Loads JSON submission metadata
 ├── run_scenario() ─────── Creates env + loads agent
-├── load_agent() ────────── Extracts zip, loads model
-└── getResult() [abstract]
+├── load_agent() ───────── Extracts zip, loads model
+└── getResult() ────────── Handles caching and KPI extraction
 
-RobustnessResilienceTestRunner (Extended)
-└── getResult(env, agent)
+Specialized Runners (Inherit Base)
+├── OperationalTestRunner ──────────── Uses ScoreL2RPN2023
+├── ReliabilityTestRunner ──────────── Uses Domain Shift framework
+└── RobustnessResilienceTestRunner ─── Multi-attacker framework:
     ├── Loads 7 attackers
     ├── Runs 50 episodes each
     ├── Aggregates metrics
@@ -85,15 +94,18 @@ power_grid/
 │   └── modified_curriculum_classes/
 ├── configuration/
 │   └── scoring-config.json  # For operational KPIs
-└── power_grid_test_runner.py
+├── power_grid_test_runner.py          # Base classes and shared utilities
+├── operational_test_runner.py         # Operational KPIs (008, 012, 036)
+├── reliability_test_runner.py         # Reliability KPIs (052, 057)
+└── robustness_resilience_test_runner.py # Robustness & Resilience (069-077)
 ```
 
 ## Usage
 
 ### Via FAB Orchestrator (Production)
 ```python
-# In __init__.py
-from .power_grid_test_runner import TestRunner_KPI_VF_073_Power_Grid
+# In orchestrator.py
+from .robustness_resilience_test_runner import TestRunner_KPI_VF_073_Power_Grid
 
 power_grid_orchestrator = Orchestrator(
     test_runners={
@@ -107,9 +119,10 @@ power_grid_orchestrator = Orchestrator(
 ```
 
 ### Local Testing
-See `test_local_robustness_resilience_kpi_069_077.py` for standalone testing without the orchestrator.
+See `test_local_power_grid_kpis.py` for standalone testing without the orchestrator.
 
 ## Authors
 
 - **Robustness/Resilience KPIs (069-077)**: INESC TEC
+- **Reliability KPIs (052, 057)**: AI4REALNET Consortium
 - **Operational KPIs (008, 012, 036)**: AI4REALNET Consortium
