@@ -84,6 +84,11 @@ def _get_test_runner(label: str = "KPI-PF-026"):
       "https://ai4realnet-int.flatland.cloud/suites/0ca46887-897a-463f-bf83-c6cd6269a977/4b0be731-8371-4e4e-a673-b630187b0bb8/tests/e075d4a7-5cda-4d3c-83ac-69a0db1d74dd")
     # "e075d4a7-5cda-4d3c-83ac-69a0db1d74dd": TestRunner_KPI_NF_045_Railway(
     return railway_orchestrator.test_runners["e075d4a7-5cda-4d3c-83ac-69a0db1d74dd"]
+  # KPI-AF-051: AI-Agent Scalability Testing (Railway)
+  if label == "KPI-AF-051":
+    print(
+      "https://ai4realnet-int.flatland.cloud/suites/0ca46887-897a-463f-bf83-c6cd6269a977/16706c82-75df-4969-932d-a7f5c941eca2/tests/b2e91a79-1390-414f-bf5d-8a6fd93c6080")
+    return railway_orchestrator.test_runners["b2e91a79-1390-414f-bf5d-8a6fd93c6080"]
 
 
 def _get_fab():
