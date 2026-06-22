@@ -66,6 +66,7 @@ class TestRunner_KPI_AF_051_Power_Grid(TestRunner):
         n_sub, n_line = self._get_complexity_metrics(record_directory)
 
         return {
+            'primary': avg_time_per_timestep,
             'total_time_seconds': total_time_seconds,
             'num_timesteps': float(num_timesteps),
             'avg_time_per_timestep': avg_time_per_timestep,
