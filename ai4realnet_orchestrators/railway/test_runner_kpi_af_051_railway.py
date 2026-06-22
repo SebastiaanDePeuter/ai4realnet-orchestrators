@@ -108,6 +108,7 @@ class TestRunner_KPI_AF_051_Railway(AbtractTestRunnerRailway):
     self.upload_and_empty_local(submission_id=submission_id, scenario_id=scenario_id)
 
     return {
+      'primary': avg_time_per_timestep,
       'total_time_seconds': total_time_seconds,
       'num_timesteps': float(num_timesteps),
       'avg_time_per_timestep': avg_time_per_timestep,
