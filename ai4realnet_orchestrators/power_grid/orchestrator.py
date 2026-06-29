@@ -28,6 +28,8 @@ from ai4realnet_orchestrators.power_grid.robustness_resilience_test_runner impor
     TestRunner_KPI_RF_076_Power_Grid,
     TestRunner_KPI_SF_077_Power_Grid
 )
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_af_051_power_grid import TestRunner_KPI_AF_051_Power_Grid
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_rs_058_power_grid import TestRunner_KPI_RS_058_Power_Grid
 
 logger = logging.getLogger(__name__)
 
@@ -187,11 +189,15 @@ power_grid_orchestrator = Orchestrator(
         # "5af6ffd9-b0a6-4f53-94bf-058fc1383ecd": TestRunner_KPI_AF_050_Power_Grid(
         #     test_id="5af6ffd9-b0a6-4f53-94bf-058fc1383ecd", scenario_ids=['7d2d75c8-49e0-433d-809d-b0811c8e2f06'], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
         # ),
-        #
-        # # KPI-AF-051: AI-Agent Scalability Testing (Power Grid)
-        # "1409dbf6-0f66-4570-97df-fda84c46c71d": TestRunner_KPI_AF_051_Power_Grid(
-        #     test_id="1409dbf6-0f66-4570-97df-fda84c46c71d", scenario_ids=['547f8244-d091-40da-892d-ee24a26ee29f'], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
-        # ),
+
+        # KPI-AF-051: AI-Agent Scalability Testing (Power Grid)
+        "1409dbf6-0f66-4570-97df-fda84c46c71d": TestRunner_KPI_AF_051_Power_Grid(
+            test_id="1409dbf6-0f66-4570-97df-fda84c46c71d", scenario_ids=[
+                '5950ad04-76e5-4c4d-aa44-435d01d250eb',  # l2rpn_case14_sandbox
+                # '6037056e-f720-4ec6-b867-24cd3483cc0c',  # ai4realnet_small
+                # 'c2413ae7-e973-4846-b61b-d404cb518dfb',  # ai4realnet_large
+            ], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
+        ),
 
         # KPI-DF-052: Domain shift adaptation time (Power Grid)
         "855729a4-6729-4ae2-bb8d-443ef4867d94": TestRunner_KPI_DF_052_Power_Grid(
@@ -217,12 +223,12 @@ power_grid_orchestrator = Orchestrator(
         # "07f8625d-c39a-4fd1-9633-012f342352e9": TestRunner_KPI_DF_056_Power_Grid(
         #     test_id="07f8625d-c39a-4fd1-9633-012f342352e9", scenario_ids=['82aed30d-9b28-4b8f-ba9a-fd05d6defec6'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"
         # ),
-        
+
         # KPI-DF-057: Domain shift success rate drop (Power Grid)
         "c5e4f893-4302-47e8-98d6-b5fbcb10963a": TestRunner_KPI_DF_057_Power_Grid(
             test_id="c5e4f893-4302-47e8-98d6-b5fbcb10963a", scenario_ids=['4d2b00cd-447a-4c7e-8cab-863f0402cb67'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"
         ),
-        
+
         # # KPI-DF-090: Domain shift forgetting rate (Power Grid)
         # "648afbec-80ad-4490-869f-6c3d8088d50f": TestRunner_KPI_DF_090_Power_Grid(
         #     test_id="648afbec-80ad-4490-869f-6c3d8088d50f", scenario_ids=['99dfde1e-2798-4741-b3eb-610a3e847bc8'], benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c"

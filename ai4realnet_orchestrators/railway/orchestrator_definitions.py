@@ -3,6 +3,7 @@
 # from https://inesctecpt.sharepoint.com/:x:/r/sites/AI4REALNET/Shared%20Documents/General/WP4%20-%20Validation%20and%20impact%20assessment/Validation%20campaigns/Overview%20tests%20for%20KPI%20on%20validation%20campaign%20hub.xlsx?d=w947339379458465eaaf243a750315375&csf=1&web=1&e=RnrCdf
 from ai4realnet_orchestrators.orchestrator import Orchestrator
 from ai4realnet_orchestrators.railway.test_runner_kpi_af_029_railway import TestRunner_KPI_AF_029_Railway
+from ai4realnet_orchestrators.railway.test_runner_kpi_af_051_railway import TestRunner_KPI_AF_051_Railway
 from ai4realnet_orchestrators.railway.test_runner_kpi_nf_045_railway import TestRunner_KPI_NF_045_Railway
 from ai4realnet_orchestrators.railway.test_runner_kpi_pf_026_railway import TestRunner_KPI_PF_026_Railway
 from ai4realnet_orchestrators.railway.test_runner_kpi_rs_058_railway import TestRunner_KPI_RS_058_Railway
@@ -239,10 +240,47 @@ railway_orchestrator = Orchestrator(
     #         test_id="dff7e358-ff14-45e7-bc22-aac2b50500f3", scenario_ids=['d7cea956-6803-488c-b402-079d13b892c6'], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
     #     ),
     #
-    #     # KPI-AF-051: AI-Agent Scalability Testing (Railway)
-    #     "b2e91a79-1390-414f-bf5d-8a6fd93c6080": TestRunner_KPI_AF_051_Railway(
-    #         test_id="b2e91a79-1390-414f-bf5d-8a6fd93c6080", scenario_ids=['1f2b1af1-dc36-49ae-9322-e61656951545'], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
-    #     ),
+    # KPI-AF-051: AI-Agent Scalability Testing (Railway)
+    # 70 scenarios: Test_{00,01} (2 cities), Test_{02,03} (3 cities), Test_04 (5 cities), Test_06 (9 cities), Test_08 (17 cities) x Level_0-9
+    "b2e91a79-1390-414f-bf5d-8a6fd93c6080": TestRunner_KPI_AF_051_Railway(
+      test_id="b2e91a79-1390-414f-bf5d-8a6fd93c6080", scenario_ids=[
+        # Test_00: 2 cities, 7 agents
+        'bb6302f1-0dc2-43ed-976b-4e5d3126006a', 'f84dcf0c-4bde-460b-9139-ea76e3694267', '89ea38d1-e42e-430e-8a72-f426f1cc0be7',
+        'ac3d32bf-2694-4405-953b-01849e7923ef', '30286226-29a3-4aa6-8243-562b88967d76', '18276866-5a94-412b-b09c-9cac2ca5add0',
+        '02e163b8-d8a3-44cb-9fb0-65501dfa35b7', 'ab2b11c8-66f4-47c3-9cd3-f765eb772dc7', 'f3ae4180-86f3-409a-a51e-c1deb7e005cd',
+        '7a3ae3eb-b783-44a3-80d4-aa9cb0bd55fb',
+        # Test_01: 2 cities, 7 agents
+        'cff75f1a-8ea2-4f1d-b516-60dd0d625fe1', 'aa4fd74f-4680-405b-a184-c9392f9218e3', '01a82553-8d2c-4f84-94df-ccb9f3250734',
+        '70316412-5480-44ca-9c2b-c51426b0390e', '60a6acda-9a1a-4a0a-8c04-75de02304713', 'db614cef-8b86-467d-a638-64c25a91ec78',
+        '43b053bb-5e9b-4538-a490-fee839344203', 'e01032e4-2047-455a-a329-175a40a8de24', '3b68eeb2-96f6-4a87-8a2f-5decaf3cb3f0',
+        'fdd89c15-3f8d-4381-9cd7-e8b773d06997',
+        # Test_02: 3 cities, 20 agents
+        '1d8f2bda-38a4-41de-a614-291b9e4697e4', '7277b987-4cc2-4cb5-a308-bb226c832747', '62e20486-eb7f-49d9-a9dc-7aa00fdfefb0',
+        'ae7a8233-8a80-496a-a2b3-0afd9a28ebe6', '2b4b92d2-6871-4c20-ad58-11dc51718379', '86f360de-8c4d-44d0-b089-3259a91dc3ea',
+        'f4b1aaeb-a498-428e-8f8f-2ed07aee0641', 'e5968696-5497-496b-8fe4-f40a837f7129', 'dec5cd4e-10b7-4a7e-a803-10e50badaaf5',
+        '139b31bd-22e4-495c-8e21-5e6e34cd5a20',
+        # Test_03: 3 cities, 50 agents
+        '9b603e03-3e2e-4366-8127-96307d3b2ce1', '54601145-edd9-469f-8180-245e26dff069', '34fa69f7-e0f7-4fd4-adf0-2ed8a47d6abc',
+        '51081d92-2ff1-40a4-b557-38215c125051', 'fef8ec79-80da-4039-9484-6ec49a29263e', 'd9d80121-bf6c-41ee-bc18-dade0e853ada',
+        '5832961b-942f-4d33-8614-c6dd4861ef46', 'e44e2b83-ad54-4e9c-a2ea-c23c1a249c54', '8ca33f45-3839-4ccc-aa88-146b41fee9f3',
+        'e15fa3d0-0da3-4513-a5bd-6082806039a3',
+        # Test_04: 5 cities, 80 agents
+        'e28dc7e5-03ae-4687-ba37-c7ed5914c901', 'ef52b0f5-a147-4333-9817-fbd7e53143ee', '45b93b12-57cc-40ff-b277-82de8ceaec32',
+        'ae557fe8-2155-42b3-8d17-2e9de47dda4b', '3b2f7caf-2e32-4db9-8377-e01f50e436c2', '9ae1a2b5-fe89-4027-b1d8-8c3888862a5e',
+        '9c221d41-fda7-409e-9ceb-a0f94018a92c', '7da98e75-8c84-4cfc-98f4-0fedf1aec08f', '7b42a1cc-ce70-4d9a-804f-ac9027a1ee48',
+        '48caf228-64f6-4b03-ad20-5a34cf8dd2ee',
+        # Test_06: 9 cities, 80 agents
+        'f262ffb3-86b9-4db8-8657-f4a96915cb83', 'b022b575-103d-4ded-8da5-2e9a8f686da6', 'ba5308f8-7e12-4c6e-8e4f-42f6280f537c',
+        'fec35ca6-d093-4081-8cf1-2f3b8f445bed', 'a410e586-219d-402f-9e34-6a1720ae46bc', 'a82beae8-9b1a-4a00-bea2-4891b56f3014',
+        '14a20672-ea9c-4205-961a-4f2a3585eea2', 'e7f82820-1caf-4b4f-ae70-8ea4d95dcb0c', '989cc7e2-1d39-4334-8130-b704fd7c6c7b',
+        '63b933c7-b63c-4ab7-b602-69aa5f91aec9',
+        # Test_08: 17 cities, 80 agents
+        'f185083b-3f74-4221-b5c8-7b2e561ae2e4', 'dc4da56a-bf2d-4351-b280-d418736844de', '02183d8b-2328-4467-81e9-97afde5618c9',
+        'd85cbc22-951e-4926-94f9-9c7a703b54eb', 'd4b12805-017e-46d9-8fe7-220569a21477', '2f5a8e75-521e-4398-bfd2-e7ff7c9e0be4',
+        '701c5b31-06d0-4e54-82b9-08e1612f1042', '6acbd77e-18a8-41c9-af81-1ff0ac1a9b0f', '20ef1912-26a4-48c1-ad1b-f08c95b144e2',
+        '890c8007-a763-4a94-86d5-28d8c11c573f',
+      ], benchmark_id="16706c82-75df-4969-932d-a7f5c941eca2"
+    ),
     #
     #     # KPI-DF-052: Domain shift adaptation time (Railway)
     #     "0c3b9843-1940-45ef-943a-dc13ec1d090a": TestRunner_KPI_DF_052_Railway(

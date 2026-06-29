@@ -27,5 +27,6 @@ def run_local(
 if __name__ == '__main__':
   run_local(
     # test="KPI-PF-026"  # Punctuality,
-    test="KPI-NF-045"  # Network Impact Propagation,
+    # test="KPI-NF-045"  # Network Impact Propagation,
+    test="KPI-AF-051"  # AI-Agent Scalability Testing,
   )
