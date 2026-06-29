@@ -1,0 +1,48 @@
+[project]
+name = "power-grid-orchestrator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # orchestrator dependencies
+    "celery==5.5.2",
+    "fab-clientlib==0.13.1",
+    "oauthlib>=3.2.2",
+    "urllib3>=2.1.0,<3.0.0",
+    # transitive dependencies from fab-clientlib
+    "typing-extensions>=4.7.1",
+    "pydantic>=2",
+    "python-dateutil>=2.8.2",
+    # power grid runner dependencies
+    "grid2op==1.10.5",
+    "lightsim2grid==0.10.3",
+    "requests>=2.34.2",
+    "requests-oauthlib>=2.0.0",
+    # transitive dependencies from grid2op
+    "numpy<2",
+    "pandas>=1.0.3,<3",
+    # attack framework dependencies
+    "stable-baselines3>=2.8.0",
+    # curriculum agent dependencies
+    "curriculumagent @ git+https://github.com/FraunhoferIEE/curriculumagent.git@master",
+    # expert agent + domain shift dependencies
+    "expertagent @ git+https://github.com/ainetus/T2.1_deep_expert.git@main",
+    "domain-shift-kpis @ git+https://github.com/ainetus/T4.2_Domain_Shift_KPIs.git@main",
+    "ljn-agent @ git+https://github.com/Mleyliabadi/l2rpn-2023-ljn-agent.git@main",
+    "ExpertOp4Grid @ git+https://github.com/Mleyliabadi/ExpertOp4Grid.git@master",
+    # to add other agents, they should be installed from their github repo directly, or from a fork if additional changes are necessary for their integration in this project
+    # if dependency issues arise, an additional line can be added to "override-dependencies" section but should be justified and tested thoroughly
+]
+
+[tool.uv]
+override-dependencies = [
+    # resolve conflict between tensorflow (needed by curriculumagent) and fab-clientlib
+    "typing-extensions>=4.7.1",
+    # more recent pandapower versions introduce breaking changes in grid2op
+    "pandapower>=2.14,<3",
+    # necessary for stable-baselines3 and for compatibility with grid2op==1.10.5
+    "gymnasium>=0.28,<1.0",
+    # override domain-shift-kpis version
+    "numpy<2",
+]

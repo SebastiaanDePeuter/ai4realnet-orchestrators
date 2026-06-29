@@ -1,0 +1,21 @@
+{
+    "scenarios": [
+        "81f18394-0164-4896-9408-4315bcfcc5e0",
+        "4d2b00cd-447a-4c7e-8cab-863f0402cb67"
+    ],
+
+    "default_config": {
+        "agent_type": "ExpertAgent",
+        "scenario_name": "ai4realnet_small",
+        "scenario_shift_name": "ai4realnet_small_shift"
+    },
+
+    "specific_config": {
+        "1569d73e-427a-42a1-b841-c9668373rteg": {
+            "agent_type": "XXX",
+            "scenario_name": "YYY",
+            "generate_new_data": false,
+            "new_data_years": 1
+        }
+    }
+}
