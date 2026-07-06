@@ -28,8 +28,7 @@ from ai4realnet_orchestrators.power_grid.robustness_resilience_test_runner impor
     TestRunner_KPI_RF_076_Power_Grid,
     TestRunner_KPI_SF_077_Power_Grid
 )
-from ai4realnet_orchestrators.power_grid.test_runner_kpi_af_051_power_grid import TestRunner_KPI_AF_051_Power_Grid
-from ai4realnet_orchestrators.power_grid.test_runner_kpi_rs_058_power_grid import TestRunner_KPI_RS_058_Power_Grid
+
 
 logger = logging.getLogger(__name__)
 
