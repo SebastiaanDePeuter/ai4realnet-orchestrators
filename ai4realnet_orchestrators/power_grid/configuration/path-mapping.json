@@ -6,8 +6,8 @@
     },
     "scenario_path": {
         "ai4realnet_small": "/home/almalinux/grid2op-scenario/ai4realnet_small",
-        "ai4realnet_small_shift": "/home/almalinux/grid2op-scenario/ai4realnet_small",
+        "ai4realnet_small_shift": "/home/almalinux/grid2op-scenario/ai4realnet_small_shift",
         "ai4realnet_large": "/home/almalinux/grid2op-scenario/ai4realnet_large",
-        "ai4realnet_large_shift": "/home/almalinux/grid2op-scenario/ai4realnet_large"
+        "ai4realnet_large_shift": "/home/almalinux/grid2op-scenario/ai4realnet_large_shift"
     }
 }

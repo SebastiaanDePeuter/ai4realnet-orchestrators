@@ -104,7 +104,6 @@ class PowerGridTestRunner(TestRunner):
         env = grid2op.make(scenario_path, backend=LightSimBackend())
 
         # Create shift environment when provided
-        # TODO: update scenario_shift_path in path-mapping.json, it's the same as scenario_path for now
         scenario_shift_name = scenario_data.get("scenario_shift_name")
         if scenario_shift_name:
             scenario_shift_path = mapping["scenario_path"][scenario_shift_name]
