@@ -135,14 +135,31 @@ class PowerGridTestRunner(TestRunner):
         if hasattr(env, "chronics_handler") and hasattr(env.chronics_handler, "real_data"):
             real_data = env.chronics_handler.real_data
             if hasattr(real_data, "subpaths"):
+                # Filter subpaths
+                original_count = len(real_data.subpaths)
                 real_data.subpaths = np.array([
                     p for p in real_data.subpaths
                     if os.path.basename(p) in self.selected_scenario_names
                 ])
+                new_count = len(real_data.subpaths)
+
+                if new_count == 0:
+                    logger.warning(f"Filtering resulted in 0 scenarios (original: {original_count}). "
+                                   f"Environment might fail on reset.")
+
+                # Update internal order
+                if hasattr(real_data, "_order"):
+                    real_data._order = np.arange(new_count)
+
                 # Reset the chronics handler to start from the first scenario
                 if hasattr(real_data, "reset"):
                     real_data.reset()
-                logger.info(f"Environment chronics filtered to {len(real_data.subpaths)} scenarios and reset")
+
+                # Update the parent chronics_handler
+                if hasattr(env.chronics_handler, "subpaths"):
+                    env.chronics_handler.subpaths = real_data.subpaths
+
+                logger.info(f"Environment chronics filtered to {new_count} scenarios and reset")
 
     def _select_weekly_scenarios(self, chronics_path: str, seed: int):
         """Select one random scenario per week."""
