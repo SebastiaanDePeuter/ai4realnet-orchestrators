@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 import ssl
 import subprocess
 import time
@@ -10,7 +9,6 @@ from typing import List, Optional
 
 import pytest
 from celery import Celery
-from testcontainers.compose import DockerCompose
 
 from ai4realnet_orchestrators.fab_oauth_utils import backend_application_flow
 from ai4realnet_orchestrators.s3_utils import s3_utils
@@ -18,56 +16,6 @@ from fab_clientlib import DefaultApi, Configuration, ApiClient
 from fab_clientlib.models.submissions_post_request import SubmissionsPostRequest
 
 logger = logging.getLogger(__name__)
-
-
-@pytest.fixture(scope="module")
-def test_containers_fixture():
-  # set env var ATTENDED to True if docker-demo.yml is already up and running
-  if os.environ.get("ATTENDED", "False").lower() == "true":
-    yield
-    return
-
-  global basic
-
-  start_time = time.time()
-  basic = DockerCompose(context="../..", profiles=["full"])
-  logger.info("/ start docker compose down")
-  basic.stop()
-  duration = time.time() - start_time
-  logger.info(f"\\ end docker compose down. Took {duration:.2f} seconds.")
-  start_time = time.time()
-  logger.info("/ start docker compose up")
-  try:
-    basic.start()
-    duration = time.time() - start_time
-    logger.info(f"\\ end docker compose up. Took {duration:.2f} seconds.")
-
-    submission_id = str(uuid.uuid4())
-    yield submission_id
-
-    # TODO workaround for testcontainers not supporting streaming to logger
-    start_time = time.time()
-    logger.info("/ start get docker compose logs")
-    stdout, stderr = basic.get_logs()
-    logger.info("stdout from docker compose")
-    logger.info(stdout)
-    logger.warning("stderr from docker compose")
-    logger.warning(stderr)
-    duration = time.time() - start_time
-    logger.info(f"\\ end get docker compose logs. Took {duration:.2f} seconds.")
-
-    start_time = time.time()
-    logger.info("/ start docker compose down")
-    basic.stop()
-    duration = time.time() - start_time
-    logger.info(f"\\ end docker down. Took {duration:.2f} seconds.")
-  except BaseException as e:
-    print("An exception occurred during running docker compose:")
-    print(e)
-    stdout, stderr = basic.get_logs()
-    print(stdout)
-    print(stderr)
-    raise e
 
 
 def run_task(task_queue_name: str, submission_id: str, submission_data_url: str, tests: List[str], **kwargs):
@@ -98,7 +46,6 @@ def run_task(task_queue_name: str, submission_id: str, submission_data_url: str,
   duration = time.time() - start_time
   logger.info(
     f"\\ End waiting for submission from portal for submission_id={submission_id}. Took {duration} seconds.")
-
 
 
 @pytest.mark.usefixtures("test_containers_fixture")

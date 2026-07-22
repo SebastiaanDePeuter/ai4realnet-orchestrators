@@ -1,4 +1,4 @@
-FROM python:3.13
+FROM ghcr.io/flatland-association/flatland-rl:latest-py3.12
 
 # This makes output not buffer and return immediately, nice for seeing results in stdout
 ENV PYTHONUNBUFFERED=1
@@ -22,9 +22,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER runner
 
 RUN sudo ls /tmp
-
-# configure runner
-USER runner
+RUN sudo chown -R runner /app
 
 RUN mkdir ai4realnet_orchestrators
 ADD ./evaluation/ai4realnet_orchestrators ./ai4realnet_orchestrators/
