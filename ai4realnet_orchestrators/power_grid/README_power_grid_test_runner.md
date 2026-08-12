@@ -4,13 +4,14 @@ Combined KPI implementations for the AI4REALNET Power Grid domain.
 
 ## Overview
 
-This module provides the base `PowerGridTestRunner` class and implementations for 14 KPIs across four categories:
+This module provides the base `PowerGridTestRunner` class and implementations for 15 KPIs across four categories:
 
 | Category | KPIs | Method |
 |----------|------|--------|
 | Operational | 008, 012, 036 | ScoreL2RPN2023 |
 | Reliability | 052, 057 | Domain shift framework |
 | Robustness | 069-073 | Multi-attacker framework |
+| Robustness | 058 | Operator overrides |
 | Resilience | 074-077 | Multi-attacker framework |
 
 ## KPIs Implemented
@@ -36,6 +37,7 @@ This module provides the base `PowerGridTestRunner` class and implementations fo
 | `TestRunner_KPI_SF_071_Power_Grid` | Severity of changed output | Severity of action changes [0-1] |
 | `TestRunner_KPI_SF_072_Power_Grid` | Steps survived | Timesteps before failure |
 | `TestRunner_KPI_VF_073_Power_Grid` | Vulnerability to perturbation | Proportion vulnerable [0-1] |
+| `TestRunner_KPI_RS_058_Power_Grid` | Robustness to operator input | Relative reward gained when paired with an operator relative to acting alone [-1,1] |
 
 ### Resilience KPIs (Benchmark: 31ea606b-681a-437a-85b9-7c81d4ccc287)
 | Class | KPI | Description |
@@ -97,7 +99,8 @@ power_grid/
 ├── power_grid_test_runner.py          # Base classes and shared utilities
 ├── operational_test_runner.py         # Operational KPIs (008, 012, 036)
 ├── reliability_test_runner.py         # Reliability KPIs (052, 057)
-└── robustness_resilience_test_runner.py # Robustness & Resilience (069-077)
+├── robustness_resilience_test_runner.py # Robustness & Resilience (069-077)
+└── test_runner_kpi_rs_058_power_grid.py # Robustness to Operator Input KPI (058)
 ```
 
 ## Usage
@@ -126,3 +129,4 @@ See `test_local_power_grid_kpis.py` for standalone testing without the orchestra
 - **Robustness/Resilience KPIs (069-077)**: INESC TEC
 - **Reliability KPIs (052, 057)**: AI4REALNET Consortium
 - **Operational KPIs (008, 012, 036)**: AI4REALNET Consortium
+- **Robustness to Operator Input KPIs (058)**: AI4REALNET Consortium

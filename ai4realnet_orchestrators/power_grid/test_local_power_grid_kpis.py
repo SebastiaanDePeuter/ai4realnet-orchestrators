@@ -42,6 +42,10 @@ from ai4realnet_orchestrators.power_grid.robustness_resilience_test_runner impor
     RobustnessResilienceTestRunner,
     ROBUSTNESS_RESILIENCE_KPI_MAPPING
 )
+from ai4realnet_orchestrators.power_grid.test_runner_kpi_rs_058_power_grid import (
+    TestRunner_KPI_RS_058_Power_Grid,
+    ROBUSTNESS_TO_OPERATOR_KPI_MAPPING
+)
 
 EXPERT_SUBMISSION = "https://raw.githubusercontent.com/flatland-association/ai4realnet-orchestrators/refs/heads/milad-merged-powergrid-kpis/ai4realnet_orchestrators/power_grid/configuration/expert-ai4realnet-small.json"
 CURRICULUM_SUBMISSION = "https://raw.githubusercontent.com/flatland-association/ai4realnet-orchestrators/refs/heads/milad-merged-powergrid-kpis/ai4realnet_orchestrators/power_grid/configuration/curriculum-ai4realnet-small.json"
@@ -69,6 +73,14 @@ robustness_runner = RobustnessResilienceTestRunner(test_id="1cbb7783-47b4-4289-9
 robustness_runner.init(
     submission_data_url=CURRICULUM_SUBMISSION,
     submission_id="local_test_robustness"
+)
+
+robustness_to_operator_runner = TestRunner_KPI_RS_058_Power_Grid(test_id="75cc9343-9371-4eb1-9613-22a26c67fc00",
+                                                  scenario_ids=['0c0730f2-e795-4c9d-8220-9bee29c46dc6'],
+                                                  benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d")
+robustness_to_operator_runner.init(
+    submission_data_url=CURRICULUM_SUBMISSION,
+    submission_id="local_test_robustness_to_operator"
 )
 
 print(f"✅ Test runners initialized")
@@ -147,6 +159,27 @@ try:
                 print(f"    - {info['name']}: {val:.4f}")
     else:
         print("  ⚠️ No robustness results found in cache.")
+
+    # ============================================================
+    # 4. ROBUSTNESS TO OPERATOR INPUT KPI
+    # ============================================================
+    print("\n" + "=" * 60)
+    print("🔄 Running Robustness to Operator Input evaluation...")
+    print("=" * 60)
+    robustness_to_operator_runner.run_scenario(
+        scenario_id="0c0730f2-e795-4c9d-8220-9bee29c46dc6",
+        submission_id="local_test_robustness_to_operator"
+    )
+    
+    print("\n📈 Operational KPIs Results:")
+    rob_op_inpt_cache = TestRunner_KPI_RS_058_Power_Grid._metrics_cache.get("local_test_robustness_to_operator")
+    if rob_op_inpt_cache:
+        for kpi_id, info in ROBUSTNESS_TO_OPERATOR_KPI_MAPPING.items():
+            val = rob_op_inpt_cache.get(info['metric_key'], 0.0)
+            print(f"  - {info['name']}: {val:.4f}")
+            print(f"    Description: {info['description']}")
+    else:
+        print("  ⚠️ No operational results found in cache.")
 
     print("\n" + "=" * 60)
     print("✅ ALL EVALUATIONS COMPLETE!")
