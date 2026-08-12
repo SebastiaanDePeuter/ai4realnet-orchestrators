@@ -55,9 +55,6 @@ class TestRunner_KPI_RS_058_Power_Grid(PowerGridTestRunner):
                 mean_rel_ep_len.append(nb_time_step / max_ts)
             return np.mean(mean_rew), np.mean(mean_rel_ep_len)
 
-        from grid2op.Agent import RecoPowerlineAgent
-        agent = RecoPowerlineAgent(env.action_space)
-
         intervened_runner = Runner(**env.get_params_for_runner(), agentClass=None, agentInstance=InterveningAgent(env.action_space, agent, 0.05))
         reference_runner = Runner(**env.get_params_for_runner(), agentClass=None, agentInstance=agent)
 
