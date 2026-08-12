@@ -2,7 +2,15 @@ name: Checks
 
 env:
   # DEPENDENCY SWITCH:
-  flatland-benchmarks-ref: v0.19.1
+  flatland-benchmarks-ref: main
+  REGISTRY: ghcr.io/flatland-association
+  # Must match flatland-benchmarks' checks.yml build-images matrix entries byte-for-byte (that's the single
+  # source of truth there, via YAML anchors) — kept in sync by hand across the two repos, same as the composite
+  # action copies below.
+  backend-hash-paths: &backend-hash-paths "ts .lintstagedrc.json .prettierrc.json .release-please-manifest.json angular.json package-lock.json package.json release-please-config.json tsconfig.json .npmrc deployment/backend"
+  frontend-hash-paths: &frontend-hash-paths "ts .lintstagedrc.json .prettierrc.json .release-please-manifest.json angular.json package-lock.json package.json release-please-config.json tsconfig.json .npmrc deployment/frontend"
+  orchestrator-deps-hash-paths: &orchestrator-deps-hash-paths "evaluation/flatland3_benchmarks/orchestrator/Dockerfile evaluation/flatland3_benchmarks/orchestrator/requirements.txt"
+  railway-deps-hash-paths: &railway-deps-hash-paths "ai4realnet_orchestrators/railway/integrationtests/Dockerfile requirements.txt ai4realnet_orchestrators/railway/requirements.txt"
 on:
   workflow_dispatch:
   pull_request:
@@ -50,33 +58,79 @@ jobs:
           python -m pip install -r requirements.txt -r requirements-dev.txt -r ai4realnet_orchestrators/railway/requirements.txt
           pytest -s -m "not integration" ai4realnet_orchestrators/railway
   test-ai4realnet-orchestrator-railway-integration:
+    permissions:
+      contents: read
+      packages: read
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         python-version: [ "3.13" ]
     steps:
+      # required so the local `uses: ./.github/actions/determine-image-reuse-strategy` step below can resolve
+      # its action.yml — a local action reference is always looked up relative to $GITHUB_WORKSPACE, which
+      # nothing else in this job populates (the two checkouts below target other paths: flatland-benchmarks/
+      # and the nested flatland-benchmarks/evaluation/ai4realnet_orchestrators/)
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: flatland-association/flatland-benchmarks
+          path: flatland-benchmarks
+          ref: ${{ env.flatland-benchmarks-ref }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Determine image tags and reuse strategy
+        id: images
+        # fab-backend/fab-frontend/flatland3-benchmarks-orchestrator: --profile full (used by this job too)
+        # brings up flatland3-benchmarks-orchestrator alongside ai4realnet-orchestrator-railway regardless of
+        # which domain's tests actually run, so it benefits from the same orchestrator-deps reuse.
+        # ai4realnet-orchestrator-railway itself (built from this repo's own Dockerfile) has its own separate
+        # reuse hook — see the "Determine ai4realnet-orchestrator-railway deps-image reuse" step (a call to the
+        # determine-railway-deps-reuse composite action) further down. Existence alone isn't freshness:
+        # flatland-benchmarks' own nightly schedule run
+        # force-rebuilds from scratch to catch base-image/dependency drift for the two floating @main refs
+        # (flatland-rl, fab-clientlib) baked into the orchestrator-deps image — this job's own schedule run
+        # must skip reuse too, or it'd keep reusing a tag that's never refreshed here.
+        uses: ./.github/actions/determine-image-reuse-strategy
+        with:
+          repo-root: flatland-benchmarks
+          registry: ${{ env.REGISTRY }}
+          backend-hash-paths: *backend-hash-paths
+          frontend-hash-paths: *frontend-hash-paths
+          orchestrator-deps-hash-paths: *orchestrator-deps-hash-paths
       - name: Inspect disk
         run: |
           df -h
           docker system df
+      # local docker builds are what eat disk space; skip pruning/freeing when reusing pre-built images from ghcr.io
       # https://stackoverflow.com/questions/30604846/docker-complains-about-no-space-left-on-device-how-to-clean-up
       - name: Prune docker system
+        if: steps.images.outputs.use-prebuilt != 'true'
         run: |
           docker system prune --all --force
       # https://www.dzombak.com/blog/2024/09/freeing-disk-space-on-github-actions-runners/
       - name: Free disk space
+        if: steps.images.outputs.use-prebuilt != 'true'
         run: |
           curl -fsSL https://raw.githubusercontent.com/kou/arrow/e49d8ae15583ceff03237571569099a6ad62be32/ci/scripts/util_free_space.sh | bash
       - name: Inspect disk again
         run: |
           df -h
           docker system df
-      - uses: actions/checkout@v6
-        with:
-          repository: flatland-association/flatland-benchmarks
-          path: flatland-benchmarks
-          ref: ${{ env.flatland-benchmarks-ref }}
+      # each image is pulled independently based on its own pull-policy/tag, not gated on use-prebuilt (which
+      # only means ALL THREE are reused) — so a single still-cached image is pulled and reused even when the
+      # other two need a local rebuild
+      - name: Pull pre-built images
+        run: |
+          if [ "${{ steps.images.outputs.backend-pull-policy }}" = "missing" ]; then docker pull ${{ steps.images.outputs.backend-tag }}; fi
+          if [ "${{ steps.images.outputs.frontend-pull-policy }}" = "missing" ]; then docker pull ${{ steps.images.outputs.frontend-tag }}; fi
+          if [ -n "${{ steps.images.outputs.orchestrator-deps-tag }}" ]; then docker pull ${{ steps.images.outputs.orchestrator-deps-tag }}; fi
       - name: Debug branch
         working-directory: flatland-benchmarks
         run: |
@@ -87,13 +141,62 @@ jobs:
       - uses: actions/checkout@v6
         with:
           path: flatland-benchmarks/evaluation/ai4realnet_orchestrators
+      - name: Determine ai4realnet-orchestrator-railway deps-image reuse
+        id: railway-deps
+        uses: ./.github/actions/determine-railway-deps-reuse
+        with:
+          repo-root: flatland-benchmarks/evaluation/ai4realnet_orchestrators
+          registry: ${{ env.REGISTRY }}
+          hash-paths: *railway-deps-hash-paths
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run tests
+          # complements (does not replace) the venv cache below: still speeds up whatever pip install
+          # actually runs on a cache-miss day, e.g. re-resolving the floating flatland-rl@main git ref
+          cache: pip
+          cache-dependency-path: |
+            flatland-benchmarks/evaluation/ai4realnet_orchestrators/requirements.txt
+            flatland-benchmarks/evaluation/ai4realnet_orchestrators/requirements-dev.txt
+            flatland-benchmarks/evaluation/ai4realnet_orchestrators/ai4realnet_orchestrators/railway/requirements.txt
+      - name: Get date bucket for cache busting
+        # railway/requirements.txt pins flatland-rl to @main (a floating ref, not a commit/tag), so its content
+        # hash alone never changes when upstream main moves; bucketing the cache key by day bounds staleness of
+        # that package to <=24h, matching flatland-benchmarks' own nightly full-rebuild cadence
+        id: date
+        run: echo "date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+      - name: Restore cached virtualenv
+        id: venv-cache
+        uses: actions/cache@v5
+        with:
+          path: flatland-benchmarks/evaluation/ai4realnet_orchestrators/.venv
+          key: ai4realnet-railway-integration-venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('flatland-benchmarks/evaluation/ai4realnet_orchestrators/requirements.txt', 'flatland-benchmarks/evaluation/ai4realnet_orchestrators/requirements-dev.txt', 'flatland-benchmarks/evaluation/ai4realnet_orchestrators/ai4realnet_orchestrators/railway/requirements.txt') }}-${{ steps.date.outputs.date }}
+          restore-keys: |
+            ai4realnet-railway-integration-venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('flatland-benchmarks/evaluation/ai4realnet_orchestrators/requirements.txt', 'flatland-benchmarks/evaluation/ai4realnet_orchestrators/requirements-dev.txt', 'flatland-benchmarks/evaluation/ai4realnet_orchestrators/ai4realnet_orchestrators/railway/requirements.txt') }}-
+      - name: Install ai4realnet Orchestrators Integration Tests Dependencies
+        if: steps.venv-cache.outputs.cache-hit != 'true'
         working-directory: flatland-benchmarks/evaluation/ai4realnet_orchestrators
         run: |
-          python -m pip install -r requirements.txt -r requirements-dev.txt -r ai4realnet_orchestrators/railway/requirements.txt
+          python -m venv --copies .venv
+          .venv/bin/pip install -r requirements.txt -r requirements-dev.txt -r ai4realnet_orchestrators/railway/requirements.txt
+      # --copies (not the venv default of symlinking) makes the cached venv self-contained, so a restore on a
+      # later run doesn't depend on setup-python's toolcache interpreter still living at the same absolute path
+      - name: Activate cached virtualenv
+        run: echo "${{ github.workspace }}/flatland-benchmarks/evaluation/ai4realnet_orchestrators/.venv/bin" >> "$GITHUB_PATH"
+      - name: Run tests
+        working-directory: flatland-benchmarks/evaluation/ai4realnet_orchestrators
+        env:
+          FAB_BACKEND_IMAGE: ${{ steps.images.outputs.backend-tag }}
+          FAB_FRONTEND_IMAGE: ${{ steps.images.outputs.frontend-tag }}
+          FAB_BACKEND_PULL_POLICY: ${{ steps.images.outputs.backend-pull-policy }}
+          FAB_FRONTEND_PULL_POLICY: ${{ steps.images.outputs.frontend-pull-policy }}
+          ORCHESTRATOR_DEPS_IMAGE: ${{ steps.images.outputs.orchestrator-deps-tag }}
+          # this repo's own DockerCompose() fixture call also passes no compose_file_name/-f, so it falls back
+          # to COMPOSE_FILE too, picking up flatland-benchmarks' image/pull_policy switches and cache/build-skip
+          # overlays (see "Determine image tags and reuse strategy" above)
+          COMPOSE_FILE: ${{ steps.images.outputs.compose-file }}
+          # empty falls back to docker-compose.yml's own ${RAILWAY_DEPS_IMAGE:-deps} default (build deps locally)
+          RAILWAY_DEPS_IMAGE: ${{ steps.railway-deps.outputs.image }}
+        run: |
           export OAUTHLIB_INSECURE_TRANSPORT=1
           pytest -s -m integration ai4realnet_orchestrators/railway
