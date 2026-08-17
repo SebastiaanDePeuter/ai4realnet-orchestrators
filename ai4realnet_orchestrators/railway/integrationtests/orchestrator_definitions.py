@@ -19,7 +19,7 @@ railway_orchestrator = Orchestrator(
     # KPI-NF-045: Network Impact Propagation (Railway)
     "e075d4a7-5cda-4d3c-83ac-69a0db1d74dd": TestRunner_KPI_NF_045_Railway(
       test_id="e075d4a7-5cda-4d3c-83ac-69a0db1d74dd", scenario_ids=[
-        'bb6302f1-0dc2-43ed-976b-4e5d3126006a', 'f84dcf0c-4bde-460b-9139-ea76e3694267',
+        'f84dcf0c-4bde-460b-9139-ea76e3694267', 'e28dc7e5-03ae-4687-ba37-c7ed5914c901'
       ],
       benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8"
     ),
