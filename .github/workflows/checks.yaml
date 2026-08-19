@@ -2,7 +2,8 @@ name: Checks
 
 env:
   # DEPENDENCY SWITCH:
-  flatland-benchmarks-ref: v0.19.1
+  # TODO use released version again
+  flatland-benchmarks-ref: main
   REGISTRY: ghcr.io/flatland-association
   # Must match flatland-benchmarks' checks.yml build-images matrix entries byte-for-byte (that's the single
   # source of truth there, via YAML anchors) — kept in sync by hand across the two repos, same as the composite
