@@ -65,5 +65,3 @@ class TestRunner_KPI_RS_058_Power_Grid(PowerGridTestRunner):
             'gained_reward': (intervened_mean_rew - reference_mean_rew) / reference_mean_rew,
             'gained_ep_completion_rate': intervened_mean_rel_ep_len - reference_mean_rel_ep_len,
         }
-
-        return {}
