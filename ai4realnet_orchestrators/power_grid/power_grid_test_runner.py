@@ -58,9 +58,13 @@ class PowerGridTestRunner(TestRunner):
     # To be overridden by specialized subclasses
     KPI_MAPPING: Dict = {}
 
-    def __init__(self, test_id: str, scenario_ids: List[str], benchmark_id: str):
+    def __init__(self, test_id: str, scenario_ids: List[str], benchmark_id: str, use_weekly_subset: bool = False):
         """Initialize with KPI-specific configuration."""
         super().__init__(test_id=test_id, scenario_ids=scenario_ids, benchmark_id=benchmark_id)
+
+        # Subset selection
+        self.use_weekly_subset = use_weekly_subset
+        self.selected_scenario_names = None
 
         # Get KPI info from mapping (subclasses should override KPI_MAPPING)
         self.kpi_info = self.KPI_MAPPING.get(test_id, {
@@ -100,7 +104,6 @@ class PowerGridTestRunner(TestRunner):
         env = grid2op.make(scenario_path, backend=LightSimBackend())
 
         # Create shift environment when provided
-        # TODO: update scenario_shift_path in path-mapping.json, it's the same as scenario_path for now
         scenario_shift_name = scenario_data.get("scenario_shift_name")
         if scenario_shift_name:
             scenario_shift_path = mapping["scenario_path"][scenario_shift_name]
@@ -113,7 +116,70 @@ class PowerGridTestRunner(TestRunner):
         agent_path = mapping["agent_path"][agent_type]
         agent = self.load_agent(agent_type, agent_path, env)
 
+        # Select subset if requested
+        if self.use_weekly_subset:
+            chronics_path = os.path.join(env.get_path_env(), "chronics")
+            self._select_weekly_scenarios(chronics_path, seed=9542)
+            logger.info(f"Selected {len(self.selected_scenario_names)} scenarios for weekly subset: {self.selected_scenario_names}")
+
+            # Filter environment chronics
+            self._filter_env_chronics(env)
+            if env_shift:
+                self._filter_env_chronics(env_shift)
+
         return self.getResult(env, env_shift, agent)
+
+    def _filter_env_chronics(self, env):
+        """Filter the environment's chronics to only include the selected subset."""
+        import numpy as np
+        if hasattr(env, "chronics_handler") and hasattr(env.chronics_handler, "real_data"):
+            real_data = env.chronics_handler.real_data
+            if hasattr(real_data, "subpaths"):
+                # Filter subpaths
+                original_count = len(real_data.subpaths)
+                real_data.subpaths = np.array([
+                    p for p in real_data.subpaths
+                    if os.path.basename(p) in self.selected_scenario_names
+                ])
+                new_count = len(real_data.subpaths)
+
+                if new_count == 0:
+                    logger.warning(f"Filtering resulted in 0 scenarios (original: {original_count}). "
+                                   f"Environment might fail on reset.")
+
+                # Update internal order
+                if hasattr(real_data, "_order"):
+                    real_data._order = np.arange(new_count)
+
+                # Reset the chronics handler to start from the first scenario
+                if hasattr(real_data, "reset"):
+                    real_data.reset()
+
+                # Update the parent chronics_handler
+                if hasattr(env.chronics_handler, "subpaths"):
+                    env.chronics_handler.subpaths = real_data.subpaths
+
+                logger.info(f"Environment chronics filtered to {new_count} scenarios and reset")
+
+    def _select_weekly_scenarios(self, chronics_path: str, seed: int):
+        """Select one random scenario per week."""
+        import random
+        all_dirs = sorted([d for d in os.listdir(chronics_path)
+                          if os.path.isdir(os.path.join(chronics_path, d)) and d != "chronic_example"])
+
+        weeks = {}
+        for name in all_dirs:
+            week = name.split('_')[0] if '_' in name else name
+            if week not in weeks:
+                weeks[week] = []
+            weeks[week].append(name)
+
+        rng = random.Random(seed)
+        selected_names = []
+        for week in sorted(weeks.keys()):
+            selected_names.append(rng.choice(weeks[week]))
+
+        self.selected_scenario_names = sorted(selected_names)
 
     @staticmethod
     def load_submission_data(submission_data_url: str) -> dict:
