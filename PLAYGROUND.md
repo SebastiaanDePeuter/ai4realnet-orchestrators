@@ -1,8 +1,8 @@
-# PLayground for ai4realnet-int.flatland.cloud
+# Playground for ai4realnet-int.flatland.cloud
 
 3 [AIREALNET use cases](https://ai4realnet.eu/use-cases/)
 
-## Electricity Network
+## Power Grid
 
 ```sql
 INSERT INTO field_definitions
@@ -47,7 +47,7 @@ INSERT INTO field_definitions
   ('e2a0afcc-69f4-4e64-9c5f-0f708049a7a8', 'percentage_complete', 'Scenario score (raw values)', NULL, NULL),
   ('05868dfa-9bfc-46c6-8ed2-edb5aff3d13c', 'percentage_complete', 'Test score (NANMEAN of scenario scores)', 'NANMEAN', NULL),
   ('22441689-e6a5-41c4-bc31-9dc27257f5eb', 'percentage_complete', 'Benchmark score (NANMEAN of test scores)', 'NANMEAN', NULL);
-  
+
 INSERT INTO scenario_definitions
   (id, name, description, field_ids)
   VALUES
@@ -80,7 +80,7 @@ INSERT INTO field_definitions
   ('41311b12-d31f-4885-9b00-f7d990f54b82', 'percentage_complete', 'Scenario score (raw values)', NULL, NULL),
   ('746de734-0bd3-4de8-b99c-891d1dae0289', 'percentage_complete', 'Test score (NANMEAN of scenario scores)', 'NANMEAN', NULL),
   ('4ed0b046-098e-4e05-a358-517956e0571d', 'percentage_complete', 'Benchmark score (NANMEAN of test scores)', 'NANMEAN', NULL);
-  
+
 INSERT INTO scenario_definitions
   (id, name, description, field_ids)
   VALUES
@@ -99,8 +99,8 @@ INSERT INTO benchmark_definitions
   (id, name, description, field_ids, test_ids)
 VALUES
   ('931e7cdf-a580-43f3-9d73-a54d07be13ac', 'Playground Railway', 'Playground Railway', array['d78ddc15-ab85-4b0e-b221-51a0427e1003','4ed0b046-098e-4e05-a358-517956e0571d']::uuid[], array['216bf91c-5d0b-4704-a7bf-d913ad9c4598', '7cb6745c-960b-4508-9eba-90e1202d1e70']::uuid[]);
-  
-  
+
+
 
 INSERT INTO field_definitions
   (id, key, description, agg_func, agg_weights)
@@ -111,7 +111,7 @@ INSERT INTO field_definitions
   ('8c07bec9-fb94-4a0c-804e-472c5dc302de', 'percentage_complete', 'Scenario score (raw values)', NULL, NULL),
   ('762cfa8a-e557-4367-8390-a54814741c94', 'percentage_complete', 'Test score (NANMEAN of scenario scores)', 'NANMEAN', NULL),
   ('d83217a3-126e-487a-b5be-fc5be863cd50', 'percentage_complete', 'Benchmark score (NANMEAN of test scores)', 'NANMEAN', NULL);
-  
+
 INSERT INTO scenario_definitions
   (id, name, description, field_ids)
   VALUES

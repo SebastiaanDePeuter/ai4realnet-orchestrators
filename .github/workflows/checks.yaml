@@ -2,6 +2,7 @@ name: Checks
 
 env:
   # DEPENDENCY SWITCH:
+  # TODO use released version again
   flatland-benchmarks-ref: main
   REGISTRY: ghcr.io/flatland-association
   # Must match flatland-benchmarks' checks.yml build-images matrix entries byte-for-byte (that's the single

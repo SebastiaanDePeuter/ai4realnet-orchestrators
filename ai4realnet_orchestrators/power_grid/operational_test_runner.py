@@ -30,12 +30,16 @@ OPERATIONAL_KPI_MAPPING = {
 }
 
 
-def get_scoring_config(chronics_path: str, seed: int):
+def get_scoring_config(chronics_path: str, seed: int, scenario_names: List[str] = None):
     """
     Retrieve scenario information (number, length) for operational KPI calculation and generate seeds.
     """
-    scenario_names = sorted([name for name in os.listdir(chronics_path)
-                             if os.path.isdir(os.path.join(chronics_path, name))])
+    if scenario_names is None:
+        scenario_names = sorted([name for name in os.listdir(chronics_path)
+                                 if os.path.isdir(os.path.join(chronics_path, name)) and name != "chronic_example"])
+    else:
+        scenario_names = sorted(scenario_names)
+
     scenario_lengths = [len(pd.read_csv(os.path.join(chronics_path, name + "/load_p.csv.bz2"), compression="bz2"))
                         for name in scenario_names]
 
@@ -56,7 +60,7 @@ def get_scoring_config(chronics_path: str, seed: int):
     return config
 
 
-def evaluate_operational_kpis(env, agent, nb_scenario: int = 9999) -> dict:
+def evaluate_operational_kpis(env, agent) -> dict:
     """
     Evaluate operational KPIs using Grid2Op's ScoreL2RPN2023.
 
@@ -66,18 +70,25 @@ def evaluate_operational_kpis(env, agent, nb_scenario: int = 9999) -> dict:
     - assistant_confidence_score: Assistant alert accuracy
     """
     chronics_path = os.path.join(env.get_path_env(), "chronics")
-    config = get_scoring_config(chronics_path, 4295) # fixed seed for reproducibility
+    
+    # Discover scenario names from the environment's chronics handler
+    scenario_names = None
+    if hasattr(env.chronics_handler, "real_data") and hasattr(env.chronics_handler.real_data, "subpaths"):
+        scenario_names = [os.path.basename(p) for p in env.chronics_handler.real_data.subpaths]
+        
+    config = get_scoring_config(chronics_path, 4295, scenario_names=scenario_names)
 
     episodes_info = config["episodes_info"]
-    scenario_names = episodes_info.keys()
+    scenario_names = list(episodes_info.keys())
     env_seeds = [int(episodes_info[name]["env_seed"]) for name in scenario_names]
     agent_seeds = [int(episodes_info[name]["agent_seed"]) for name in scenario_names]
 
-    nb_scenario = min(nb_scenario, int(config["nb_scenario"]))
+    nb_scenario = int(config["nb_scenario"])
+
     scoring = ScoreL2RPN2023(
         env=env,
-        env_seeds=env_seeds[:nb_scenario],
-        agent_seeds=agent_seeds[:nb_scenario],
+        env_seeds=env_seeds,
+        agent_seeds=agent_seeds,
         nb_scenario=nb_scenario,
         min_losses_ratio=0.8,
         verbose=0,

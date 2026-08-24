@@ -18,10 +18,28 @@ Author: AI4REALNET Consortium
 import sys
 import os
 import warnings
+import json
+import logging
+
+# Suppress TensorFlow and other library logging noise
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ["KMP_WARNINGS"] = "0"
+# Configure global logging to WARNING
+logging.basicConfig(
+    level=logging.WARNING,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%H:%M:%S'
+)
+# Enable INFO for the project's own code
+logging.getLogger("ai4realnet_orchestrators").setLevel(logging.INFO)
+# Silence particularly noisy libraries
+logging.getLogger("grid2op").setLevel(logging.ERROR)
+logging.getLogger("lightsim2grid").setLevel(logging.ERROR)
+
+logger = logging.getLogger(__name__)
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore")
-os.environ["KMP_WARNINGS"] = "0"
 
 # Add paths for imports
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -46,13 +64,23 @@ from ai4realnet_orchestrators.power_grid.test_runner_kpi_rs_058_power_grid impor
     TestRunner_KPI_RS_058_Power_Grid,
     ROBUSTNESS_TO_OPERATOR_KPI_MAPPING
 )
+from ai4realnet_orchestrators.power_grid.power_grid_test_runner import PowerGridTestRunner
 
-EXPERT_SUBMISSION = "https://raw.githubusercontent.com/flatland-association/ai4realnet-orchestrators/refs/heads/milad-merged-powergrid-kpis/ai4realnet_orchestrators/power_grid/configuration/expert-ai4realnet-small.json"
-CURRICULUM_SUBMISSION = "https://raw.githubusercontent.com/flatland-association/ai4realnet-orchestrators/refs/heads/milad-merged-powergrid-kpis/ai4realnet_orchestrators/power_grid/configuration/curriculum-ai4realnet-small.json"
+# Patch PowerGridTestRunner to support local files for submission data
+def load_submission_data_local(submission_data: str) -> dict:
+    """Load submission data from local file."""
+    with open(submission_data, 'r') as f:
+        return json.load(f)
+
+PowerGridTestRunner.load_submission_data = staticmethod(load_submission_data_local)
+
+EXPERT_SUBMISSION = os.path.join(SCRIPT_DIR, "configuration", "expert-ai4realnet-small.json")
+CURRICULUM_SUBMISSION = os.path.join(SCRIPT_DIR, "configuration", "curriculum-ai4realnet-small.json")
 
 reliability_runner = ReliabilityTestRunner(test_id="855729a4-6729-4ae2-bb8d-443ef4867d94",
                                            scenario_ids=['81f18394-0164-4896-9408-4315bcfcc5e0'], 
-                                           benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c")
+                                           benchmark_id="43040944-39ac-47c9-b91d-bc8ca5693b3c",
+                                           use_weekly_subset=True)
 
 reliability_runner.init(
     submission_data_url=EXPERT_SUBMISSION,
@@ -61,7 +89,8 @@ reliability_runner.init(
 
 operational_runner = OperationalTestRunner(test_id="ae4dcac7-c559-457e-902d-ee35d064bb3f",
                                            scenario_ids=['fc090c38-8740-4911-96aa-2defd06f8715'],
-                                           benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8")
+                                           benchmark_id="4b0be731-8371-4e4e-a673-b630187b0bb8",
+                                           use_weekly_subset=True)
 operational_runner.init(
     submission_data_url=CURRICULUM_SUBMISSION,
     submission_id="local_test_operational"
@@ -69,7 +98,8 @@ operational_runner.init(
 
 robustness_runner = RobustnessResilienceTestRunner(test_id="1cbb7783-47b4-4289-9abf-27939da69a2f",
                                                   scenario_ids=['900d5489-2539-4a49-b3fb-3ae2039be92f'],
-                                                  benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d")
+                                                  benchmark_id="3810191b-8cfd-4b03-86b2-f7e530aab30d",
+                                                  use_weekly_subset=True)
 robustness_runner.init(
     submission_data_url=CURRICULUM_SUBMISSION,
     submission_id="local_test_robustness"
@@ -171,7 +201,7 @@ try:
         submission_id="local_test_robustness_to_operator"
     )
     
-    print("\n📈 Operational KPIs Results:")
+    print("\n📈 Robustness to Operator Input KPIs Results:")
     rob_op_inpt_cache = TestRunner_KPI_RS_058_Power_Grid._metrics_cache.get("local_test_robustness_to_operator")
     if rob_op_inpt_cache:
         for kpi_id, info in ROBUSTNESS_TO_OPERATOR_KPI_MAPPING.items():
@@ -179,7 +209,7 @@ try:
             print(f"  - {info['name']}: {val:.4f}")
             print(f"    Description: {info['description']}")
     else:
-        print("  ⚠️ No operational results found in cache.")
+        print("  ⚠️ No robustness to operator input results found in cache.")
 
     print("\n" + "=" * 60)
     print("✅ ALL EVALUATIONS COMPLETE!")
