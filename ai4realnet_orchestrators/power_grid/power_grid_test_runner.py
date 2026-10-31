@@ -241,6 +241,19 @@ class PowerGridTestRunner(TestRunner):
                                   nn_kwargs=nn_kwargs
                                   )
             agent.load(model_path)
+        elif agent_type == "ExplainingActionAlternativesAgent":
+            from grid2op.gym_compat import BoxGymObsSpace, DiscreteActSpace
+            from ai4realnet_orchestrators.power_grid.framework.explaining_action_alternatives_agent import ExplainingActionAlternativesAgent
+
+            obs_attr_to_keep = ["rho", "p_or"]
+            act_attr_to_keep =  ["set_line_status_simple"]
+            gym_observation_space = BoxGymObsSpace(env.observation_space, attr_to_keep=obs_attr_to_keep)
+            gym_action_space = DiscreteActSpace(env.action_space, attr_to_keep=act_attr_to_keep)
+
+            agent = ExplainingActionAlternativesAgent(env.action_space, gym_action_space, gym_observation_space)
+            agent.load_state(agent_path)
+            agent.reset(None)
+
         else:
             raise SyntaxError(f'Unsupported agent type: {agent_type}')
 

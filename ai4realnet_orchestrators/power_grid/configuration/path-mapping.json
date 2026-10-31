@@ -2,7 +2,8 @@
     "agent_path": {
         "CurriculumAgent": "/home/almalinux/ai4realnet-orchestrators/ai4realnet_orchestrators/power_grid/submission/trained_model/curriculum/agent.zip",
         "ExpertAgent": "/home/almalinux/ai4realnet-orchestrators/ai4realnet_orchestrators/power_grid/submission/trained_model/ExpertAgent/ai4realnet_small/PPO_SB3.zip",
-        "RandomAgent": null
+        "RandomAgent": null,
+        "ExplainingActionAlternativesAgent": "/home/almalinux/ai4realnet-orchestrators/ai4realnet_orchestrators/power_grid/submission/trained_model/ExplainingActionAlternatives/ai4realnet_small/outcome_predictor_weights.pth"
     },
     "scenario_path": {
         "ai4realnet_small": "/home/almalinux/grid2op-scenario/ai4realnet_small",
